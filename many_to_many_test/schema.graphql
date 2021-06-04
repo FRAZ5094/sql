@@ -1,0 +1,990 @@
+"""The root query type which gives access points into the data universe."""
+type Query implements Node {
+  """
+  Exposes the root query type nested one level down. This is helpful for Relay 1
+  which can only query top level fields if they are in a particular form.
+  """
+  query: Query!
+
+  """
+  The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
+  """
+  nodeId: ID!
+
+  """Fetches an object given its globally unique `ID`."""
+  node(
+    """The globally unique `ID`."""
+    nodeId: ID!
+  ): Node
+
+  """Reads and enables pagination through a set of `Class`."""
+  classes(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Class`."""
+    orderBy: [ClassesOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ClassCondition
+  ): ClassesConnection
+
+  """Reads and enables pagination through a set of `Enrolement`."""
+  enrolements(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Enrolement`."""
+    orderBy: [EnrolementsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EnrolementCondition
+  ): EnrolementsConnection
+
+  """Reads and enables pagination through a set of `Student`."""
+  students(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Student`."""
+    orderBy: [StudentsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: StudentCondition
+  ): StudentsConnection
+  class(id: Int!): Class
+  enrolement(studentId: Int!, classId: Int!): Enrolement
+  student(id: Int!): Student
+
+  """Reads a single `Class` using its globally unique `ID`."""
+  classByNodeId(
+    """The globally unique `ID` to be used in selecting a single `Class`."""
+    nodeId: ID!
+  ): Class
+
+  """Reads a single `Enrolement` using its globally unique `ID`."""
+  enrolementByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `Enrolement`.
+    """
+    nodeId: ID!
+  ): Enrolement
+
+  """Reads a single `Student` using its globally unique `ID`."""
+  studentByNodeId(
+    """The globally unique `ID` to be used in selecting a single `Student`."""
+    nodeId: ID!
+  ): Student
+}
+
+"""An object with a globally unique `ID`."""
+interface Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+}
+
+"""A connection to a list of `Class` values."""
+type ClassesConnection {
+  """A list of `Class` objects."""
+  nodes: [Class!]!
+
+  """
+  A list of edges which contains the `Class` and cursor to aid in pagination.
+  """
+  edges: [ClassesEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Class` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Class implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: Int!
+  name: String!
+
+  """Reads and enables pagination through a set of `Enrolement`."""
+  enrolements(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Enrolement`."""
+    orderBy: [EnrolementsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EnrolementCondition
+  ): EnrolementsConnection!
+}
+
+"""A connection to a list of `Enrolement` values."""
+type EnrolementsConnection {
+  """A list of `Enrolement` objects."""
+  nodes: [Enrolement!]!
+
+  """
+  A list of edges which contains the `Enrolement` and cursor to aid in pagination.
+  """
+  edges: [EnrolementsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Enrolement` you could get from the connection."""
+  totalCount: Int!
+}
+
+type Enrolement implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  studentId: Int!
+  classId: Int!
+
+  """Reads a single `Student` that is related to this `Enrolement`."""
+  student: Student
+
+  """Reads a single `Class` that is related to this `Enrolement`."""
+  class: Class
+}
+
+type Student implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: Int!
+  name: String!
+
+  """Reads and enables pagination through a set of `Enrolement`."""
+  enrolements(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """The method to use when ordering `Enrolement`."""
+    orderBy: [EnrolementsOrderBy!] = [PRIMARY_KEY_ASC]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EnrolementCondition
+  ): EnrolementsConnection!
+}
+
+"""A location in a connection that can be used for resuming pagination."""
+scalar Cursor
+
+"""Methods to use when ordering `Enrolement`."""
+enum EnrolementsOrderBy {
+  NATURAL
+  STUDENT_ID_ASC
+  STUDENT_ID_DESC
+  CLASS_ID_ASC
+  CLASS_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Enrolement` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input EnrolementCondition {
+  """Checks for equality with the object’s `studentId` field."""
+  studentId: Int
+
+  """Checks for equality with the object’s `classId` field."""
+  classId: Int
+}
+
+"""A `Enrolement` edge in the connection."""
+type EnrolementsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Enrolement` at the end of the edge."""
+  node: Enrolement!
+}
+
+"""Information about pagination in a connection."""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: Cursor
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: Cursor
+}
+
+"""A `Class` edge in the connection."""
+type ClassesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Class` at the end of the edge."""
+  node: Class!
+}
+
+"""Methods to use when ordering `Class`."""
+enum ClassesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Class` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input ClassCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+}
+
+"""A connection to a list of `Student` values."""
+type StudentsConnection {
+  """A list of `Student` objects."""
+  nodes: [Student!]!
+
+  """
+  A list of edges which contains the `Student` and cursor to aid in pagination.
+  """
+  edges: [StudentsEdge!]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `Student` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `Student` edge in the connection."""
+type StudentsEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `Student` at the end of the edge."""
+  node: Student!
+}
+
+"""Methods to use when ordering `Student`."""
+enum StudentsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Student` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input StudentCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+}
+
+"""
+The root mutation type which contains root level fields which mutate data.
+"""
+type Mutation {
+  """Creates a single `Class`."""
+  createClass(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateClassInput!
+  ): CreateClassPayload
+
+  """Creates a single `Enrolement`."""
+  createEnrolement(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEnrolementInput!
+  ): CreateEnrolementPayload
+
+  """Creates a single `Student`."""
+  createStudent(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateStudentInput!
+  ): CreateStudentPayload
+
+  """Updates a single `Class` using its globally unique id and a patch."""
+  updateClassByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClassByNodeIdInput!
+  ): UpdateClassPayload
+
+  """Updates a single `Class` using a unique key and a patch."""
+  updateClass(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateClassInput!
+  ): UpdateClassPayload
+
+  """
+  Updates a single `Enrolement` using its globally unique id and a patch.
+  """
+  updateEnrolementByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEnrolementByNodeIdInput!
+  ): UpdateEnrolementPayload
+
+  """Updates a single `Enrolement` using a unique key and a patch."""
+  updateEnrolement(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEnrolementInput!
+  ): UpdateEnrolementPayload
+
+  """Updates a single `Student` using its globally unique id and a patch."""
+  updateStudentByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateStudentByNodeIdInput!
+  ): UpdateStudentPayload
+
+  """Updates a single `Student` using a unique key and a patch."""
+  updateStudent(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateStudentInput!
+  ): UpdateStudentPayload
+
+  """Deletes a single `Class` using its globally unique id."""
+  deleteClassByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClassByNodeIdInput!
+  ): DeleteClassPayload
+
+  """Deletes a single `Class` using a unique key."""
+  deleteClass(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteClassInput!
+  ): DeleteClassPayload
+
+  """Deletes a single `Enrolement` using its globally unique id."""
+  deleteEnrolementByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEnrolementByNodeIdInput!
+  ): DeleteEnrolementPayload
+
+  """Deletes a single `Enrolement` using a unique key."""
+  deleteEnrolement(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEnrolementInput!
+  ): DeleteEnrolementPayload
+
+  """Deletes a single `Student` using its globally unique id."""
+  deleteStudentByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteStudentByNodeIdInput!
+  ): DeleteStudentPayload
+
+  """Deletes a single `Student` using a unique key."""
+  deleteStudent(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteStudentInput!
+  ): DeleteStudentPayload
+}
+
+"""The output of our create `Class` mutation."""
+type CreateClassPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Class` that was created by this mutation."""
+  class: Class
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Class`. May be used by Relay 1."""
+  classEdge(
+    """The method to use when ordering `Class`."""
+    orderBy: [ClassesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClassesEdge
+}
+
+"""All input for the create `Class` mutation."""
+input CreateClassInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Class` to be created by this mutation."""
+  class: ClassInput!
+}
+
+"""An input for mutations affecting `Class`"""
+input ClassInput {
+  id: Int
+  name: String!
+}
+
+"""The output of our create `Enrolement` mutation."""
+type CreateEnrolementPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Enrolement` that was created by this mutation."""
+  enrolement: Enrolement
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Student` that is related to this `Enrolement`."""
+  student: Student
+
+  """Reads a single `Class` that is related to this `Enrolement`."""
+  class: Class
+
+  """An edge for our `Enrolement`. May be used by Relay 1."""
+  enrolementEdge(
+    """The method to use when ordering `Enrolement`."""
+    orderBy: [EnrolementsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EnrolementsEdge
+}
+
+"""All input for the create `Enrolement` mutation."""
+input CreateEnrolementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Enrolement` to be created by this mutation."""
+  enrolement: EnrolementInput!
+}
+
+"""An input for mutations affecting `Enrolement`"""
+input EnrolementInput {
+  studentId: Int!
+  classId: Int!
+}
+
+"""The output of our create `Student` mutation."""
+type CreateStudentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Student` that was created by this mutation."""
+  student: Student
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Student`. May be used by Relay 1."""
+  studentEdge(
+    """The method to use when ordering `Student`."""
+    orderBy: [StudentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): StudentsEdge
+}
+
+"""All input for the create `Student` mutation."""
+input CreateStudentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Student` to be created by this mutation."""
+  student: StudentInput!
+}
+
+"""An input for mutations affecting `Student`"""
+input StudentInput {
+  id: Int
+  name: String!
+}
+
+"""The output of our update `Class` mutation."""
+type UpdateClassPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Class` that was updated by this mutation."""
+  class: Class
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Class`. May be used by Relay 1."""
+  classEdge(
+    """The method to use when ordering `Class`."""
+    orderBy: [ClassesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClassesEdge
+}
+
+"""All input for the `updateClassByNodeId` mutation."""
+input UpdateClassByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Class` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Class` being updated.
+  """
+  patch: ClassPatch!
+}
+
+"""
+Represents an update to a `Class`. Fields that are set will be updated.
+"""
+input ClassPatch {
+  id: Int
+  name: String
+}
+
+"""All input for the `updateClass` mutation."""
+input UpdateClassInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Class` being updated.
+  """
+  patch: ClassPatch!
+  id: Int!
+}
+
+"""The output of our update `Enrolement` mutation."""
+type UpdateEnrolementPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Enrolement` that was updated by this mutation."""
+  enrolement: Enrolement
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Student` that is related to this `Enrolement`."""
+  student: Student
+
+  """Reads a single `Class` that is related to this `Enrolement`."""
+  class: Class
+
+  """An edge for our `Enrolement`. May be used by Relay 1."""
+  enrolementEdge(
+    """The method to use when ordering `Enrolement`."""
+    orderBy: [EnrolementsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EnrolementsEdge
+}
+
+"""All input for the `updateEnrolementByNodeId` mutation."""
+input UpdateEnrolementByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Enrolement` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Enrolement` being updated.
+  """
+  patch: EnrolementPatch!
+}
+
+"""
+Represents an update to a `Enrolement`. Fields that are set will be updated.
+"""
+input EnrolementPatch {
+  studentId: Int
+  classId: Int
+}
+
+"""All input for the `updateEnrolement` mutation."""
+input UpdateEnrolementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Enrolement` being updated.
+  """
+  patch: EnrolementPatch!
+  studentId: Int!
+  classId: Int!
+}
+
+"""The output of our update `Student` mutation."""
+type UpdateStudentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Student` that was updated by this mutation."""
+  student: Student
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Student`. May be used by Relay 1."""
+  studentEdge(
+    """The method to use when ordering `Student`."""
+    orderBy: [StudentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): StudentsEdge
+}
+
+"""All input for the `updateStudentByNodeId` mutation."""
+input UpdateStudentByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Student` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Student` being updated.
+  """
+  patch: StudentPatch!
+}
+
+"""
+Represents an update to a `Student`. Fields that are set will be updated.
+"""
+input StudentPatch {
+  id: Int
+  name: String
+}
+
+"""All input for the `updateStudent` mutation."""
+input UpdateStudentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Student` being updated.
+  """
+  patch: StudentPatch!
+  id: Int!
+}
+
+"""The output of our delete `Class` mutation."""
+type DeleteClassPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Class` that was deleted by this mutation."""
+  class: Class
+  deletedClassNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Class`. May be used by Relay 1."""
+  classEdge(
+    """The method to use when ordering `Class`."""
+    orderBy: [ClassesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): ClassesEdge
+}
+
+"""All input for the `deleteClassByNodeId` mutation."""
+input DeleteClassByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Class` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteClass` mutation."""
+input DeleteClassInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
+
+"""The output of our delete `Enrolement` mutation."""
+type DeleteEnrolementPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Enrolement` that was deleted by this mutation."""
+  enrolement: Enrolement
+  deletedEnrolementNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Student` that is related to this `Enrolement`."""
+  student: Student
+
+  """Reads a single `Class` that is related to this `Enrolement`."""
+  class: Class
+
+  """An edge for our `Enrolement`. May be used by Relay 1."""
+  enrolementEdge(
+    """The method to use when ordering `Enrolement`."""
+    orderBy: [EnrolementsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): EnrolementsEdge
+}
+
+"""All input for the `deleteEnrolementByNodeId` mutation."""
+input DeleteEnrolementByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Enrolement` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteEnrolement` mutation."""
+input DeleteEnrolementInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  studentId: Int!
+  classId: Int!
+}
+
+"""The output of our delete `Student` mutation."""
+type DeleteStudentPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Student` that was deleted by this mutation."""
+  student: Student
+  deletedStudentNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """An edge for our `Student`. May be used by Relay 1."""
+  studentEdge(
+    """The method to use when ordering `Student`."""
+    orderBy: [StudentsOrderBy!] = [PRIMARY_KEY_ASC]
+  ): StudentsEdge
+}
+
+"""All input for the `deleteStudentByNodeId` mutation."""
+input DeleteStudentByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Student` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteStudent` mutation."""
+input DeleteStudentInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
